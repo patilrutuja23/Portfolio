@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Single-file portfolio website for Rutuja Patil, B.Tech CSE student and AI/ML builder." />
+    <title>Rutuja Patil | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #060609;
+        --panel: #16161f;
+        --panel-2: #1c1d28;
+        --text: #edf2ff;
+        --muted: #c9d2ea;
+        --purple: #7b6cf6;
+        --teal: #2dd4bf;
+        --pink: #e879a0;
+        --amber: #f59e0b;
+        --line: rgba(255,255,255,0.08);
+        --shadow: 0 18px 40px rgba(0,0,0,0.35);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(123,108,246,0.12), transparent 18%),
+          radial-gradient(circle at top right, rgba(46,212,191,0.10), transparent 15%),
+          radial-gradient(circle at center, rgba(232,121,160,0.08), transparent 12%),
+          linear-gradient(180deg, #060609 0%, #08080d 45%, #060609 100%);
+      }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+      .container { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+      section { padding: 52px 0; }
+      .section-title {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        margin-bottom: 18px;
+      }
+      .section-title h2 {
+        font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 4vw, 2rem); margin: 0;
+      }
+      .eyebrow {
+        text-transform: uppercase; letter-spacing: .35em; font-size: .78rem; color: #c8bbff;
+      }
+      .glass {
+        background: linear-gradient(180deg, rgba(22,22,31,0.92), rgba(12,13,19,0.96));
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(14px);
+      }
+      .fade-up { opacity: 0; transform: translateY(18px); transition: opacity .8s ease, transform .8s ease; }
+      .fade-up.in-view { opacity: 1; transform: translateY(0); }
+
+      /* Navbar */
+      nav {
+        position: fixed; inset: 0 0 auto 0; z-index: 50;
+        background: rgba(6,6,9,0.58);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        backdrop-filter: blur(14px);
+      }
+      .nav-wrap { display: flex; align-items: center; justify-content: space-between; min-height: 68px; }
+      .logo { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--text); }
+      .logo span { color: var(--purple); }
+      .nav-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+      .nav-links a { color: var(--muted); font-size: .96rem; transition: color .25s ease; }
+      .nav-links a:hover { color: var(--text); }
+      .menu-btn { display: none; }
+
+      /* Hero */
+      .hero { padding-top: 116px; position: relative; overflow: hidden; }
+      .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; align-items: center; }
+      .hero-card { padding: 28px; position: relative; overflow: hidden; }
+      .hero-card::before,
+      .hero-card::after {
+        content: ''; position: absolute; border-radius: 999px; filter: blur(60px); opacity: .35; pointer-events: none;
+      }
+      .hero-card::before { width: 160px; height: 160px; background: var(--purple); top: -30px; right: -40px; }
+      .hero-card::after { width: 180px; height: 180px; background: var(--teal); bottom: -60px; left: -40px; }
+      .pulse-dot { width: 10px; height: 10px; border-radius: 999px; background: #22c55e; display: inline-block; margin-right: 8px; box-shadow: 0 0 0 0 rgba(34,197,94,0.75); animation: pulse 1.8s infinite; }
+      @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.75); } 70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+      .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.8rem, 7vw, 5rem); line-height: 1.02; margin: 10px 0 14px; }
+      .hero h1 span { background: linear-gradient(135deg, var(--purple), var(--pink), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .lead { color: var(--muted); font-size: 1.04rem; max-width: 620px; }
+      .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+      .btn { border-radius: 14px; padding: 12px 16px; font-weight: 700; transition: transform .18s ease, box-shadow .18s ease; border: 1px solid transparent; }
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary { background: linear-gradient(135deg, var(--purple), #8f84ff); color: #fff; box-shadow: 0 10px 24px rgba(123,108,246,0.35); }
+      .btn-ghost { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.03); }
+      .stat-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+      .stat-box { padding: 12px; border-radius: 18px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+      .stat-box strong { display: block; font-size: 1.02rem; color: #fff; }
+      .mini { color: var(--muted); font-size: .95rem; }
+
+      .side-card { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+      .mini-card { border-radius: 20px; padding: 14px; background: linear-gradient(180deg, rgba(26,27,37,0.95), rgba(10,11,16,0.95)); border: 1px solid rgba(255,255,255,0.08); }
+      .mini-card small { color: #d8ddf7; text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; }
+      .mini-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; margin: 6px 0; }
+      .mini-card p { color: var(--muted); font-size: .95rem; }
+
+      /* About */
+      .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 18px; }
+      .avatar-card { padding: 18px; text-align: center; position: relative; min-height: 320px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+      .avatar-ring {
+        width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 12px; display: grid; place-items: center;
+        background: linear-gradient(135deg, rgba(123,108,246,0.95), rgba(232,121,160,0.9), rgba(45,212,191,0.9));
+        color: #fff; font-family: 'Syne', sans-serif; font-size: 2rem; box-shadow: 0 12px 30px rgba(123,108,246,0.25);
+      }
+      .location-pill { align-self: flex-end; border-radius: 999px; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); font-size: .9rem; }
+      .bio-card { padding: 18px; }
+      .chip-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+      .chip { border-radius: 999px; padding: 9px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #e9efff; font-size: .95rem; }
+
+      /* Cards */
+      .card-hover { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+      .card-hover:hover { transform: translateY(-4px); border-color: rgba(123,108,246,0.55); box-shadow: 0 14px 28px rgba(123,108,246,0.18); }
+      .section-dark { background: linear-gradient(180deg, rgba(10,11,16,0.94), rgba(6,6,9,0.98)); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+      /* Skills */
+      .skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .skill-card { padding: 16px; }
+      .skill-card .emoji { font-size: 1.4rem; }
+      .skill-card h3 { margin: 8px 0 8px; font-size: 1.02rem; }
+      .skill-card p { margin: 0 0 10px; color: var(--muted); font-size: .95rem; }
+      .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+      .tag { border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #eef4ff; font-size: .88rem; }
+
+      /* Projects */
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        align-items: stretch;
+      }
+      .project-card {
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 290px;
+      }
+      .project-card p { flex: 1; }
+      .project-card .tag-list { margin-top: 10px; }
+      .project-card.featured { grid-column: span 1; }
+      .project-badge { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 7px 10px; font-size: .82rem; text-transform: uppercase; letter-spacing: .18em; color: #fff; }
+      .badge-purple { background: linear-gradient(135deg, var(--purple), var(--pink)); }
+      .badge-amber { background: linear-gradient(135deg, #fbbf24, var(--amber)); }
+      .badge-teal { background: linear-gradient(135deg, var(--teal), #38bdf8); }
+      .project-card h3 { font-size: 1.08rem; margin: 10px 0 8px; }
+      .project-card p { color: var(--muted); font-size: .95rem; }
+      .project-link { display: inline-block; margin-top: 8px; color: #d9d7ff; font-weight: 700; }
+
+      /* Hackathons, timeline, certification cards */
+      .hack-grid, .cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .mini-card.dark { background: linear-gradient(180deg, rgba(22,22,31,0.95), rgba(12,13,18,0.98)); }
+      .timeline { position: relative; border-left: 2px solid rgba(123,108,246,0.35); padding-left: 18px; display: grid; gap: 14px; }
+      .timeline-item { position: relative; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+      .timeline-item::before { content: ''; position: absolute; left: -26px; top: 16px; width: 12px; height: 12px; border-radius: 999px; background: #2f3345; border: 2px solid rgba(255,255,255,0.15); box-shadow: 0 0 0 4px rgba(123,108,246,0.08); }
+      .timeline-item.active::before { background: var(--purple); box-shadow: 0 0 0 0 rgba(123,108,246,0.35), 0 0 18px rgba(123,108,246,0.45); animation: halo 1.8s infinite; }
+      @keyframes halo { 0% { box-shadow: 0 0 0 0 rgba(123,108,246,0.35); } 70% { box-shadow: 0 0 0 10px rgba(123,108,246,0); } 100% { box-shadow: 0 0 0 0 rgba(123,108,246,0); } }
+      .item-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: .92rem; color: var(--muted); }
+      .tag-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 9px; font-size: .78rem; text-transform: uppercase; letter-spacing: .16em; color: #fff; }
+      .badge-amber2 { background: linear-gradient(135deg, var(--amber), #fbbf24); }
+      .badge-teal2 { background: linear-gradient(135deg, var(--teal), #38bdf8); }
+      .badge-purple2 { background: linear-gradient(135deg, var(--purple), #8b7bff); }
+
+      .cert-card { padding: 12px; cursor: pointer; }
+      .cert-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: linear-gradient(135deg, rgba(123,108,246,0.14), rgba(45,212,191,0.10)); }
+      .cert-card h3 { margin: 10px 0 4px; font-size: 1rem; }
+      .cert-card p { color: var(--muted); font-size: .92rem; margin: 0; }
+      .credly-card { padding: 14px; margin-top: 14px; border: 1px solid rgba(245,158,11,0.16); background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(255,255,255,0.03)); border-radius: 18px; }
+      .credly-card a { color: #ffe6b0; font-weight: 700; }
+
+      /* Contact */
+      .contact-wrap { text-align: center; max-width: 840px; margin: 0 auto; }
+      .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+      .contact-link { display: block; padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); transition: transform .18s ease, border-color .18s ease; }
+      .contact-link:hover { transform: translateY(-2px); border-color: rgba(123,108,246,0.55); }
+      .contact-link strong { display: block; margin-bottom: 4px; }
+      .contact-link span { color: var(--muted); font-size: .92rem; }
+
+      /* Modal */
+      .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(3,4,7,0.72); backdrop-filter: blur(8px); z-index: 100; padding: 18px; }
+      .modal.open { display: flex; }
+      .modal-box { width: min(980px, 100%); background: linear-gradient(180deg, rgba(10,11,16,0.98), rgba(5,6,10,1)); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; box-shadow: var(--shadow); padding: 12px; }
+      .modal-box img { width: 100%; max-height: 82vh; object-fit: contain; border-radius: 18px; }
+
+      footer { padding: 20px 0 40px; color: var(--muted); text-align: center; font-size: .95rem; }
+
+      @media (max-width: 1100px) {
+        .project-grid, .skill-grid, .hack-grid, .cert-grid, .contact-grid { grid-template-columns: repeat(2, 1fr); }
+        .project-card.featured { grid-column: span 2; }
+      }
+
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .menu-btn { display: inline-flex; }
+        .hero-grid, .about-grid { grid-template-columns: 1fr; }
+        .stat-bar { grid-template-columns: 1fr; }
+        .project-grid, .skill-grid, .hack-grid, .cert-grid, .contact-grid { grid-template-columns: 1fr; }
+        .project-card.featured { grid-column: span 1; }
+        .section-title { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="container nav-wrap">
+        <a class="logo" href="#top">Rutuja<span>.</span></a>
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#hackathons">Hackathons</a>
+          <!-- <a href="#experience">Experience</a> -->
+          <a href="#problem-solving">Problem Solving</a>
+          <a href="#certifications">Certifications</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="btn btn-ghost menu-btn" href="#contact">Say Hello</a>
+      </div>
+    </nav>
+
+    <main id="top">
+      <section class="hero container">
+        <div class="hero-grid">
+          <article class="hero-card glass fade-up">
+            <p class="eyebrow"><span class="pulse-dot"></span>Open to opportunities</p>
+            <h1>Rutuja <br/> Patil <br/> </h1>
+            <p class="lead">B.Tech CSE student at Deogiri Institute Of Engineering and Management Studies building AI-powered platforms, GenAI systems, and social-impact solutions with real-world relevance.</p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="https://drive.google.com/file/d/1A_YW7uzRyymZAJ7rNUVNvVD49QAnyy30/view?usp=drive_link" target="_blank" rel="noreferrer">View Resume</a>
+              <a class="btn btn-ghost" href="#contact">Say Hello</a>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-box"><strong>6+ Real Projects</strong><span class="mini">Built and shipped</span></div>
+              <div class="stat-box"><strong>🏆 Won InnoHack</strong><span class="mini">Hackathon winner</span></div>
+              <div class="stat-box"><strong>AI/ML Core Focus</strong><span class="mini">GenAI, RAG, Full Stack</span></div>
+            </div>
+          </article>
+          <aside class="side-card">
+            <article class="mini-card glass fade-up"><small>Current focus</small><h3>AI systems with human impact</h3><p>Designing tools for emergency response, education funding, and accessibility-driven digital experiences.</p></article>
+            <article class="mini-card glass fade-up"><small>Location</small><h3>Chh. Sambhajinagar, Maharashtra</h3><p>Student builder, hackathon participant, and AI/ML project developer.</p></article>
+          </aside>
+        </div>
+      </section>
+
+      <!-- <section id="about" class="container">
+        <div class="section-title fade-up"><h2>About</h2><span class="eyebrow">Who I am</span></div>
+        <div class="about-grid">
+          <article class="avatar-card glass card-hover fade-up">
+            <div>
+              <div class="avatar-ring">RP</div>
+              <h3 style="margin:8px 0 6px; font-family:'Syne',sans-serif; font-size:1.1rem;">Rutuja Patil</h3>
+              <p style="color:var(--muted); margin:0; font-size:.95rem;">B.Tech CSE student at Deogiri Institute of Engineering and Management Studies</p>
+            </div>
+            <div class="location-pill">Chh. Sambhajinagar, Maharashtra</div>
+          </article>
+          <article class="bio-card glass card-hover fade-up">
+            <p style="color:var(--muted); font-size:1rem;">CSE student passionate about AI systems that solve real problems. Specializes in GenAI, RAG, Full Stack, and human-centered product thinking. Won hackathons, shipped 6+ platforms, and stays focused on social impact through practical technology.</p>
+            <div class="chip-row">
+              <span class="chip">Deogiri Institute</span>
+              <span class="chip">GenAI & RAG</span>
+              <span class="chip">InnoHack Winner</span>
+              <span class="chip">Social Impact</span>
+              <span class="chip">patilrutuja042@gmail.com</span>
+            </div>
+          </article>
+        </div>
+      </section> -->
+
+
+<section id="about" class="container">
+  <div class="section-title fade-up">
+    <h2>About</h2>
+    <span class="eyebrow">Who I am</span>
+  </div>
+
+  <div class="about-grid">
+
+    <article class="avatar-card glass card-hover fade-up">
+      <div>
+        <div class="avatar-ring">RP</div>
+
+        <h3 style="margin:8px 0 6px; font-family:'Syne',sans-serif; font-size:1.15rem;">
+          Rutuja Patil
+        </h3>
+
+        <p style="color:var(--muted); margin:0; font-size:.95rem;">
+          B.Tech Computer Science & Engineering Student
+        </p>
+      </div>
+
+      <div class="location-pill">
+        📍 Chh. Sambhajinagar, Maharashtra
+      </div>
+    </article>
+
+    <article class="bio-card glass card-hover fade-up">
+
+  <h3 style="margin-top:0;font-family:'Syne',sans-serif;">
+    AI/ML Builder & Software Developer
+  </h3>
+
+  <p style="color:var(--muted);line-height:1.8;">
+    B.Tech CSE student passionate about Artificial Intelligence, Machine Learning,
+    Generative AI, and Full-Stack Development. I enjoy building technology that
+    solves real-world problems and creates measurable impact.
+  </p>
+
+  <div class="chip-row">
+    <span class="chip">🏆 InnoHack Winner</span>
+    <span class="chip">🎯 DIPEX 2025 Selected</span>
+    <span class="chip">🚑 Build for Bharat Top 30</span>
+    <span class="chip">🤖 AI/ML & GenAI</span>
+    <span class="chip">💻 Full Stack Development</span>
+  </div>
+
+  <div style="margin-top:20px;">
+    <p><strong>Projects Built:</strong> 6+ AI & Full-Stack Projects</p>
+    <p><strong>Focus Areas:</strong> GenAI, RAG, Machine Learning, MLOps</p>
+    <p><strong>Currently Learning:</strong> Deep Learning & MLOps</p>
+    <p><strong>Career Goal:</strong> Software Development & AI/ML Engineering</p>
+  </div>
+
+</article>
+
+  </div>
+</section>
+
+
+
+      <section id="skills" class="section-dark">
+        <div class="container">
+          <div class="section-title fade-up"><h2>Skills</h2><span class="eyebrow">What I work with</span></div>
+          <div class="skill-grid">
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">💻</div><h3>Languages</h3><p>Python, Java, JavaScript, TypeScript, C, C++</p><div class="tag-list"><span class="tag">Python</span><span class="tag">Java</span><span class="tag">JavaScript</span><span class="tag">TypeScript</span><span class="tag">C</span><span class="tag">C++</span></div></article>
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">🧩</div><h3>Frontend</h3><p>React.js, Next.js, Vue, Tailwind CSS, HTML/CSS, Bootstrap</p><div class="tag-list"><span class="tag">React.js</span><span class="tag">Next.js</span><span class="tag">Vue</span><span class="tag">Tailwind</span><span class="tag">HTML/CSS</span><span class="tag">Bootstrap</span></div></article>
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">⚙️</div><h3>Backend</h3><p>Node.js, Express.js, FastAPI, Django, Flask</p><div class="tag-list"><span class="tag">Node.js</span><span class="tag">Express.js</span><span class="tag">FastAPI</span><span class="tag">Django</span><span class="tag">Flask</span></div></article>
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">🤖</div><h3>AI / ML</h3><p>RAG, LLMs, OpenAI API, TensorFlow, PyTorch, Scikit-learn, NLP</p><div class="tag-list"><span class="tag">RAG</span><span class="tag">LLMs</span><span class="tag">OpenAI API</span><span class="tag">TensorFlow</span><span class="tag">PyTorch</span><span class="tag">Scikit-learn</span></div></article>
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">🗄️</div><h3>Database</h3><p>MongoDB, MySQL, PostgreSQL, Firebase</p><div class="tag-list"><span class="tag">MongoDB</span><span class="tag">MySQL</span><span class="tag">PostgreSQL</span><span class="tag">Firebase</span></div></article>
+            <article class="skill-card glass card-hover fade-up"><div class="emoji">☁️</div><h3>Tools & Cloud</h3><p>AWS, Docker, Git & GitHub, Postman, Figma, Google Maps API</p><div class="tag-list"><span class="tag">AWS</span><span class="tag">Docker</span><span class="tag">GitHub</span><span class="tag">Postman</span><span class="tag">Figma</span><span class="tag">Google Maps API</span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="container">
+        <div class="section-title fade-up"><h2>Projects</h2><span class="eyebrow">Featured builds</span></div>
+        <div class="project-grid">
+          <article class="project-card glass card-hover featured fade-up"><span class="project-badge badge-purple">Featured</span><h3>Rapid-Seva (Nova-Sphere)</h3><p>AI emergency response system that coordinates ambulances, optimizes routes with ML, and recommends hospitals in real time.</p><div class="tag-list"><span class="tag">Python</span><span class="tag">Google Maps API</span><span class="tag">React.js</span><span class="tag">Firebase</span><span class="tag">TypeScript</span><span class="tag">Node.js</span></div><a class="project-link" href="https://github.com/patilrutuja23/Nova-Sphere" target="_blank" rel="noreferrer">GitHub →</a></article>
+          <article class="project-card glass card-hover fade-up"><span class="project-badge badge-amber">AI Platform</span><h3>DevPulse-AI</h3><p>Developer productivity platform that analyzes coding activity, monitors GitHub insights, and improves workflow with intelligent analytics.</p><div class="tag-list"><span class="tag">React.js</span><span class="tag">Python</span><span class="tag">IBM watsonx</span><span class="tag">FastAPI</span><span class="tag">Tailwind CSS</span><span class="tag">Node.js</span><span class="tag">Github Token</span></div><a class="project-link" href="https://github.com/patilrutuja23/DevPulse-AI" target="_blank" rel="noreferrer">GitHub →</a></article>
+          <article class="project-card glass card-hover featured fade-up"><span class="project-badge badge-teal">Featured</span><h3>FundMyDegree</h3><p>Crowdfunding platform for students to raise education funds, create campaigns, track donations, and secure fundraising management.</p><div class="tag-list"><span class="tag">React.js</span><span class="tag">Grok API</span><span class="tag">Node.js</span><span class="tag">Express.js</span><span class="tag">Tailwind CSS</span></div><a class="project-link" href="https://github.com/patilrutuja23/FundMyDegree" target="_blank" rel="noreferrer">GitHub →</a></article>
+          <article class="project-card glass card-hover fade-up"><span class="project-badge badge-purple">AI Companion</span><h3>CodeGennie</h3><p>AI coding companion for generating snippets, debugging, and boosting productivity through intelligent suggestions.</p><div class="tag-list"><span class="tag">Python</span><span class="tag">Ollama</span><span class="tag">React.js</span><span class="tag">FastAPI</span><span class="tag">Tailwind CSS</span></div><a class="project-link" href="https://github.com/patilrutuja23/CodeGennie" target="_blank" rel="noreferrer">GitHub →</a></article>
+          <article class="project-card glass card-hover fade-up"><span class="project-badge badge-teal">Service Platform</span><h3>ServeSync</h3><p>Smart service management platform for service requests, task allocation, and real-time tracking between users and providers.</p><div class="tag-list"><span class="tag">React.js</span><span class="tag">Node.js</span><span class="tag">Cloudinary </span><span class="tag">Express.js</span><span class="tag">Gemini API</span><span class="tag">Firebase</span></div><a class="project-link" href="https://github.com/patilrutuja23/ServeSync" target="_blank" rel="noreferrer">GitHub →</a></article>
+          <article class="project-card glass card-hover fade-up"><span class="project-badge badge-amber">NLP + RAG</span><h3>FIR-Sahayak</h3><p>An AI-powered legal assistant that uses NLP and RAG to retrieve relevant legal provisions and generate structured FIR drafts from user complaints.</p><div class="tag-list"><span class="tag">Python</span><span class="tag">Mistral API</span><span class="tag">RAG</span><span class="tag">NLP</span><span class="tag">LLM</span><span class="tag">Flask</span><span class="tag">PostgreSQL</span></div><a class="project-link" href="https://github.com/patilrutuja23/fir-sahayak" target="_blank" rel="noreferrer">GitHub →</a></article>
+        </div>
+      </section>
+
+      <section id="hackathons" class="section-dark">
+        <div class="container">
+         <div class="section-title fade-up">
+  <h2>Hackathons</h2>
+  <span class="eyebrow">Achievements & Participation</span>
+</div>
+
+<div class="hack-grid">
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>🏆 InnoHack 2025 — Winner</h3>
+    <p>Won the hackathon by building an AI-powered solution with real-world impact.</p>
+  </article>
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>🎯 DIPEX 2025 — Selected</h3>
+    <p>Selected for DIPEX 2025 with the social-impact project Parivartan.</p>
+  </article>
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>🌍 Google Solution Challenge</h3>
+    <p>Built ServeSync, a solution aligned with the UN Sustainable Development Goals.</p>
+  </article>
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>🚑 Build for Bharat — Top 30/300+</h3>
+    <p>Rapid Seva ranked among the Top 30 teams out of 300+ participating teams.</p>
+  </article>
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>💻 IBM BOB Dev Day</h3>
+    <p>Participated with DevPulse, showcasing innovation in AI and software development.</p>
+  </article>
+
+  <article class="mini-card dark glass card-hover fade-up">
+    <h3>📱 Samsung Innovation Campus</h3>
+    <p>Selected for Samsung's innovation program focused on emerging technologies.</p>
+  </article>
+
+</div>
+        </div>
+      </section>
+
+      <!-- <section id="experience" class="container">
+        <div class="section-title fade-up"><h2>Experience</h2><span class="eyebrow">Timeline</span></div>
+        <div class="timeline fade-up">
+          <article class="timeline-item active"><div class="item-head"><strong>2024–Present</strong><span class="tag-badge badge-purple2">Active</span></div><p>AI/ML Project Developer — Building 6+ AI and full-stack platforms, specializing in RAG and LLMs.</p></article>
+          <article class="timeline-item"><div class="item-head"><strong>2025</strong><span class="tag-badge badge-amber2">Achievement</span></div><p>InnoHack Winner — Built and delivered an AI solution end to end for a real-world problem.</p></article>
+          <article class="timeline-item"><div class="item-head"><strong>2024</strong><span class="tag-badge badge-purple2">Certifications</span></div><p>AWS & AI Certifications from AWS Academy, Udacity, and 365 Data Science.</p></article>
+          <article class="timeline-item"><div class="item-head"><strong>2024</strong><span class="tag-badge badge-teal2">Program</span></div><p>Samsung Innovation Campus — Built innovation mindset and collaborative tech experience.</p></article>
+          <article class="timeline-item"><div class="item-head"><strong>2023–Present</strong><span class="tag-badge badge-teal2">Education</span></div><p>B.Tech CSE — Deogiri Institute of Engineering and Management Studies.</p></article>
+          <article class="timeline-item"><div class="item-head"><strong>Ongoing</strong><span class="tag-badge badge-purple2">Practice</span></div><p>Competitive Programming — LeetCode, HackerRank, CodeChef, Kaggle.</p></article>
+        </div>
+      </section> -->
+
+      <section id="problem-solving" class="container">
+  <div class="section-title fade-up">
+    <h2>Problem Solving</h2>
+    <span class="eyebrow">Coding Profiles & DSA</span>
+  </div>
+
+  <div class="hack-grid">
+
+    <article class="mini-card dark glass card-hover fade-up">
+      <h3>💻 LeetCode</h3>
+      <p>
+        Solved 250+ problems across Arrays, Strings, Trees, Graphs,
+        Dynamic Programming, Greedy Algorithms, and Binary Search,
+        strengthening problem-solving and interview preparation skills.
+      </p>
+      <a class="project-link"
+         href="https://leetcode.com/u/rutupatil23/"
+         target="_blank"
+         rel="noreferrer">
+         View Profile →
+      </a>
+    </article>
+
+    <article class="mini-card dark glass card-hover fade-up">
+      <h3>🏅 HackerRank</h3>
+      <p>
+        Achieved 4★ in Problem Solving and practiced Java, Data Structures,
+        Algorithms, and SQL challenges to build strong coding fundamentals.
+      </p>
+      <a class="project-link"
+         href="https://www.hackerrank.com/profile/patilrutuja042"
+         target="_blank"
+         rel="noreferrer">
+         View Profile →
+      </a>
+    </article>
+
+    <article class="mini-card dark glass card-hover fade-up">
+      <h3>⚡ CodeChef</h3>
+      <p>
+        Solved 50+ coding problems and participated in competitive programming
+        contests to improve algorithmic thinking and coding efficiency.
+      </p>
+      <a class="project-link"
+         href="https://www.codechef.com/users/rutupatil"
+         target="_blank"
+         rel="noreferrer">
+         View Profile →
+      </a>
+    </article>
+
+    <article class="mini-card dark glass card-hover fade-up">
+      <h3>📚 GeeksforGeeks</h3>
+      <p>
+        Completed DSA learning tracks and solved coding problems covering
+        arrays, linked lists, trees, recursion, graphs, and dynamic programming.
+      </p>
+      <a class="project-link"
+         href="https://www.geeksforgeeks.org/profile/patilrut94v3?tab=activity"
+         target="_blank"
+         rel="noreferrer">
+         View Profile →
+      </a>
+    </article>
+
+    <article class="mini-card dark glass card-hover fade-up">
+      <h3>📊 Kaggle</h3>
+      <p>
+        Explored machine learning datasets, participated in data science
+        projects, and practiced model building, evaluation, and experimentation.
+      </p>
+      <a class="project-link"
+         href="https://www.kaggle.com/rutupatil29"
+         target="_blank"
+         rel="noreferrer">
+         View Profile →
+      </a>
+    </article>
+
+  </div>
+</section>
+
+
+      <section id="certifications" class="section-dark">
+        <div class="container">
+          <div class="section-title fade-up"><h2>Certifications and Participations</h2><span class="eyebrow">Click to open in Drive</span></div>
+          <div class="cert-grid">
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1tfgCx0rdI71o32qpsBy-0s4opYq3lt4V/view?usp=sharing" data-title="IBM Dev Day: Bob Edition"><img src="https://drive.google.com/file/d/1tfgCx0rdI71o32qpsBy-0s4opYq3lt4V/view?usp=sharing" alt="IBM Dev Day: Bob Edition certificate" /><h3>IBM Dev Day: Bob Edition</h3><p>IBM · May 2026</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/thumbnail?id=1Fa9-nMexi2BTCfY_Ry8XjB4e_vXecbqj" data-title="AWS AI Practitioner Challenge"><img src="https://drive.google.com/thumbnail?id=1Fa9-nMexi2BTCfY_Ry8XjB4e_vXecbqj" alt="AWS AI Practitioner Challenge certificate" /><h3>AWS AI Practitioner Challenge</h3><p>Udacity · May 2026</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1ymoAs6pHui6Nhli8S5IdegzMmQC_IIB5/view?usp=drive_link" data-title="Complete Machine Learning & Data Science - GFG"><img src="https://drive.google.com/file/d/1ymoAs6pHui6Nhli8S5IdegzMmQC_IIB5/view?usp=drive_link" alt="Complete Machine Learning & Data Science - Skill Upcertificate" /><h3>Complete Machine Learning & Data Science - GFG</h3><p>GeeksforGeeks · December 2025</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1dvS5X5CYCQgqQFmym-okOEa8w1F3_R_J/view?usp=sharing" data-title="GHCI 2025 Scholar Certificate of Achievement"><img src="https://drive.google.com/file/d/1dvS5X5CYCQgqQFmym-okOEa8w1F3_R_J/view?usp=sharing" alt="GHCI 2025 Scholar Certificate of Achievement" /><h3>GHCI 2025 Scholar Certificate of Achievement</h3><p>AnitaB.org India · December 2025</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/19MOnGlWIp1X2JdFSkNrcUoC8i5aGvdug/view?usp=sharing" data-title="Machine Learning Process A-Z"><img src="https://drive.google.com/file/d/19MOnGlWIp1X2JdFSkNrcUoC8i5aGvdug/view?usp=sharing" alt="Machine Learning Process A-Z certificate" /><h3>Machine Learning Process A-Z</h3><p>365 Data Science · November 2025</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1MbAQWNuM0dDL_j2V2xG-4t6_9NOnnMLm/view?usp=drive_link" data-title="Aspire Leaders Program"><img src="https://drive.google.com/file/d/1MbAQWNuM0dDL_j2V2xG-4t6_9NOnnMLm/view?usp=drive_link" alt="AI Certification certificate" /><h3>Aspire Leaders Program</h3><p>October 2025</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1R-DN8Q7BGWEyochg1caOaDNEbhuFMnYn/view?usp=sharing" data-title="AWS Academy Cloud Foundations"><img src="https://drive.google.com/file/d/1R-DN8Q7BGWEyochg1caOaDNEbhuFMnYn/view?usp=sharing" alt="AWS Academy Cloud Foundations certificate" /><h3>AWS Academy Cloud Foundations</h3><p>AWS Academy · August 2025</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1xQ7ctZyyiuNROyfPFunQxzVgNUEpO-Nj/view?usp=sharing" data-title="Google Cloud Career Launchpad - Cloud Engineer track"><img src="https://drive.google.com/file/d/1xQ7ctZyyiuNROyfPFunQxzVgNUEpO-Nj/view?usp=sharing" alt="Google Cloud Career Launchpad - Cloud Engineer track certificate" /><h3>Google Cloud Career Launchpad - Cloud Engineer track</h3><p>Google Cloud · July 2024</p></article>
+            <article class="cert-card glass card-hover fade-up" data-image="https://drive.google.com/file/d/1wJVDln9Zah-gaUKAAxrUoOpFIkqyEuXe/view?usp=sharing" data-title="Linux Fundamentals RH104"><img src="https://drive.google.com/file/d/1wJVDln9Zah-gaUKAAxrUoOpFIkqyEuXe/view?usp=sharing" alt="Linux Fundamentals RH104 certificate" /><h3>Linux Fundamentals RH104</h3><p>Red Hat · October 2024</p></article>
+          </div>
+          <article class="credly-card fade-up"><a href="https://www.credly.com/users/rutuja-patil.e762aebf" target="_blank" rel="noreferrer">View All Badges on Credly — AWS Academy Cloud Foundations and more</a></article>
+        </div>
+      </section>
+
+
+      <section id="contact" class="container">
+        <div class="contact-wrap">
+          <div class="section-title fade-up" style="justify-content:center; text-align:center;"><h2>Contact</h2><span class="eyebrow">Let’s connect</span></div>
+          <p class="fade-up" style="color:var(--muted);">Open to AI/ML projects, internships, hackathon collaborations, and product-driven opportunities that combine learning with real impact.</p>
+          <div class="contact-grid">
+            <a class="contact-link card-hover fade-up" href="mailto:patilrutuja042@gmail.com"><strong>Email</strong><span>patilrutuja042@gmail.com</span></a>
+            <a class="contact-link card-hover fade-up" href="https://www.linkedin.com/in/rutuja-patil-1a1522301/" target="_blank" rel="noreferrer"><strong>LinkedIn</strong><span>Rutuja Patil</span></a>
+            <a class="contact-link card-hover fade-up" href="https://github.com/patilrutuja23" target="_blank" rel="noreferrer"><strong>GitHub</strong><span>patilrutuja23</span></a>
+        
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container">Rutuja Patil · Deogiri Institute Of Engineering and Management Studies· Chh. Sambhajinagar · patilrutuja042@gmail.com</footer>
+
+    <div class="modal" id="certModal" aria-hidden="true">
+      <div class="modal-box" id="modalBox">
+        <img id="modalImage" src="" alt="Certificate preview" />
+      </div>
+    </div>
+
+    <script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('in-view');
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+      const modal = document.getElementById('certModal');
+      const modalImage = document.getElementById('modalImage');
+      const fallbackCertThumb = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="#15192d"/>
+              <stop offset="100%" stop-color="#0b1020"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="500" fill="url(#g)" rx="32"/>
+          <rect x="46" y="46" width="708" height="408" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)"/>
+          <circle cx="180" cy="170" r="64" fill="rgba(124,58,237,0.22)"/>
+          <circle cx="620" cy="330" r="92" fill="rgba(45,212,191,0.14)"/>
+          <text x="110" y="240" font-family="Segoe UI, Arial, sans-serif" font-size="44" fill="#e5ebff">Certificate preview</text>
+          <text x="110" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="#a5b4fc">Drive link unavailable right now</text>
+        </svg>
+      `);
+      function getDriveId(url) {
+        const fileMatch = url.match(/\/d\/([^/?#]+)/);
+        return fileMatch ? fileMatch[1] : '';
+      }
+      function toThumbnail(url) {
+        const id = getDriveId(url);
+        return id ? `/proxy?url=${encodeURIComponent(`https://drive.google.com/thumbnail?id=${id}`)}` : url;
+      }
+      function toFullPreview(url) {
+        const id = getDriveId(url);
+        return id ? `/proxy?url=${encodeURIComponent(`https://drive.google.com/uc?export=view&id=${id}`)}` : url;
+      }
+      function attachCertFallback(img) {
+        if (!img) return;
+        img.onerror = () => {
+          img.src = fallbackCertThumb;
+          img.onerror = null;
+        };
+      }
+      document.querySelectorAll('.cert-card').forEach((card) => {
+        const thumbnail = toThumbnail(card.dataset.image);
+        const fullPreview = toFullPreview(card.dataset.image);
+        const img = card.querySelector('img');
+        if (img) {
+          img.src = thumbnail || fallbackCertThumb;
+          attachCertFallback(img);
+        }
+        card.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.open(card.dataset.image || fullPreview, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    </script>
+  </body>
+</html>
